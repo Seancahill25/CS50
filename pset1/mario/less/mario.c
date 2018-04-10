@@ -4,7 +4,7 @@
 int main(void)
 {
     int n;
-
+    // This while loop can use a comment
     do
     {
         n = get_int("Height: ");
@@ -13,7 +13,9 @@ int main(void)
 
     for (int i = 0; i < n; i++)
     {
+        // I think you should indent comments to match the line it refers to
 //s is for spaces
+        // instead of having a comment that declares s is for spaces, try using space as the variable name, that way the code comments itself
         for (int s = 0; s < n - i - 1; s++)
         {
             printf(" ");

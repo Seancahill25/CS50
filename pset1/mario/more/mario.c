@@ -13,7 +13,10 @@ int main(void)
 
     for (int i = 0; i < n; i++)
     {
+        //COMMENTS NEED INDENTION
 //s is for spaces
+        // Variables could use better names
+        //for loops could use a description
         for (int s = 0; s < n - i - 1; s++)
         {
             printf(" ");

@@ -4,6 +4,8 @@
 
 int main(void)
 {
+    //Great variable names!
+    // No comments at all :`(
     int coins = 0;
     float number;
     int change;
@@ -16,7 +18,9 @@ int main(void)
 
     while (change >= 25)
     {
+        // Good use of shorthand here!
         coins++;
+        //try using the shorthand here too, change -= 25;
         change = change - 25;
     }
     while (change >= 10)
