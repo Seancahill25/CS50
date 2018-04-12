@@ -16,7 +16,7 @@ int main(int argc, string argv[])
     }
     else
     {
-        for (int letter = 0, k = strlen(key); letter < k; letter++)
+        for (int letter = 0, k = strlen(key); letter < k; letter++)//checks if key is valid
         {
             if (!isalpha(key[letter]))
             {
@@ -31,21 +31,21 @@ int main(int argc, string argv[])
     int messageLength = strlen(message);
     int keyLength = strlen(key);
 
-    for (int letter = 0, kLetter = 0; letter < messageLength; letter++)
+    for (int letter = 0, keyCount = 0; letter < messageLength; letter++)//loop through key and message
     {
-        int keyLetter = tolower(key[kLetter % keyLength]) - 97;
+        int keyLetter = tolower(key[keyCount % keyLength]) - 'a';//keeps track of where my place in the key is
 
         if (isalpha(message[letter]))
         {
             if (isupper(message[letter]))
             {
-                printf("%c", (((message[letter] - 65) + keyLetter) % 26) + 65);
-                kLetter++;
+                printf("%c", (((message[letter] - 'A') + keyLetter) % 26) + 'A');
+                keyCount++;//only ups the count on my key when used
             }
             else
             {
-                printf("%c", (((message[letter] - 97) + keyLetter) % 26) + 97);
-                kLetter++;
+                printf("%c", (((message[letter] - 'a') + keyLetter) % 26) + 'a');
+                keyCount++;
             }
         }
         else
