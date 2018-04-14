@@ -7,11 +7,11 @@
 int main(int argc, string argv[])
 {
     int key = 0;
-    string s;
+    string message;
     if (argc == 2)
     {
         key = atoi(argv[1]);
-        s = get_string("plaintext: ");
+        message = get_string("plaintext: ");
     }
     else
     {
@@ -19,24 +19,22 @@ int main(int argc, string argv[])
         return 1;
     }
     printf("ciphertext: ");
-    for (int i = 0, n = strlen(s); i < n; i++)
+    for (int letter = 0, length = strlen(message); letter < length; letter++)
     {
-        if (isalpha(s[i]))
+        if (isalpha(message[letter]))
         {
-            if (isupper(s[i]))
+            if (isupper(message[letter]))
             {
-                char t = (((s[i] - 65) + key) % 26) + 65;
-                printf("%c", t);
+                printf("%c", (((message[letter] - 65) + key) % 26) + 65);
             }
             else
             {
-                char t = (((s[i] - 97) + key) % 26) + 97;
-                printf("%c", t);
+                printf("%c", (((message[letter] - 97) + key) % 26) + 97);
             }
         }
         else
         {
-            printf("%c", s[i]);
+            printf("%c", message[letter]);
         }
     }
     printf("\n");
