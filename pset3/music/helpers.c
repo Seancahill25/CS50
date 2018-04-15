@@ -7,7 +7,25 @@
 // Converts a fraction formatted as X/Y to eighths
 int duration(string fraction)
 {
+    int numerator =  fraction[0];
+    int denominator = fraction[2];
 
+    if (denominator == '8')
+    {
+        printf("%c", numerator * denominator / '8');
+    }
+    if else (denominator == '4')
+    {
+        printf("%c", numerator * denominator * '2' / '4')
+    }
+    if else (denominator == '2')
+    {
+        printf("%c", numerator * denominator * '4' / '2');
+    }
+    else (denominator == '1')
+    {
+        printf("%c", '8');
+    }
 }
 
 // Calculates frequency (in Hz) of a note
