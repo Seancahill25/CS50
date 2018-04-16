@@ -31,7 +31,30 @@ int duration(string fraction)
 // Calculates frequency (in Hz) of a note
 int frequency(string note)
 {
-    // TODO
+    double hertz = 440.0;
+    switch (note[0])
+    {
+        case 'A' :
+            break;
+        case 'B':
+            hertz *= pow(2.0, 2.0 / 12.0);
+            break;
+        case 'C':
+            hertz /= pow(2.0, 9.0 / 12.0);
+            break;
+        case 'D':
+            hertz /= pow(2.0, 7.0 / 12.0);
+            break;
+        case 'E':
+            hertz /= pow(2.0, 5.0 / 12.0);
+            break;
+        case 'F':
+            hertz /= pow(2.0, 4.0 / 12.0);
+            break;
+        case 'G':
+            hertz /= pow(2.0, 2.0 / 12.0);
+  }
+    printf("%g", hertz);
 }
 
 // Determines whether a string represents a rest
