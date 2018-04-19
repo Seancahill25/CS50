@@ -1,37 +1,22 @@
-// Helper functions for music
-
 #include <cs50.h>
+#include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "helpers.h"
 
-// Converts a fraction formatted as X/Y to eighths
 int duration(string fraction)
 {
-    int numerator =  fraction[0];
-    int denominator = fraction[2];
+    int numerator =  fraction[0] - '0';
+    int denominator = fraction[2] - '0';
 
-    if (denominator == '8')
-    {
-        printf("%c", numerator * denominator / '8');
-    }
-    if else (denominator == '4')
-    {
-        printf("%c", numerator * denominator * '2' / '4')
-    }
-    if else (denominator == '2')
-    {
-        printf("%c", numerator * denominator * '4' / '2');
-    }
-    else (denominator == '1')
-    {
-        printf("%c", '8');
-    }
+    return numerator * (8 / denominator);
 }
 
-// Calculates frequency (in Hz) of a note
 int frequency(string note)
 {
     double hertz = 440.0;
+    int octave = note[strlen(note) - 1] - '0';
     switch (note[0])
     {
         case 'A' :
@@ -53,19 +38,28 @@ int frequency(string note)
             break;
         case 'G':
             hertz /= pow(2.0, 2.0 / 12.0);
-  }
-    printf("%g", hertz);
+    }
+    if (octave > 4)
+    {
+        hertz *= pow(2, octave - 4);
+    }
+    else if (octave < 4)
+    {
+        hertz /= pow(2, 4 - octave);
+    }
+
+    if (note[1] == '#')
+    {
+        hertz *= pow(2.0, 1.0 / 12.0);
+    }
+    else if (note[1] == 'b')
+    {
+        hertz /= pow(2.0, 1.0 / 12.0);
+    }
+    return round(hertz);
 }
 
-// Determines whether a string represents a rest
 bool is_rest(string s)
 {
-    if (s = "")
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return strlen(s) == 0;
 }
