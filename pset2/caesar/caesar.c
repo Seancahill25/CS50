@@ -1,3 +1,10 @@
+//Program works well. Passes all Check50 tests.
+//Style50 - Looks good! But consider adding more comments!
+
+//In place of magic numbers in line 35 and 39, ASCII characters could be used.
+
+//When the User do not enter key, you can be more specific on what the User is missing.
+
 #include <cs50.h>
 #include <ctype.h>
 #include <stdio.h>

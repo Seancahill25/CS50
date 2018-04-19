@@ -1,3 +1,9 @@
+//Program works well. But check50 throws error because
+//the expected output do not have "name:  " but the actual output prints "name: ".
+//For example: expected "HLJ\n", not "name: HLJ\n"
+
+//line 21 - i++ after printf is not required
+
 #include <cs50.h>
 #include <ctype.h>
 #include <stdio.h>

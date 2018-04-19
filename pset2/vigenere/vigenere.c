@@ -1,3 +1,8 @@
+//Program works well. Passes all Check50 tests.
+//Style50 - Looks good! But consider adding more comments!
+
+//When the User do not enter key, you can be more specific on what the User is missing on line 19 and 28.
+
 #include <cs50.h>
 #include <ctype.h>
 #include <stdio.h>
