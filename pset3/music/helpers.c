@@ -15,14 +15,14 @@ int duration(string fraction)
 
 int frequency(string note)
 {
-    double hertz = 440.0;
+    double hertz = 440.0;//default value of A4
     int octave = note[strlen(note) - 1] - '0';
     switch (note[0])
     {
         case 'A' :
             break;
         case 'B':
-            hertz *= pow(2.0, 2.0 / 12.0);
+            hertz *= pow(2.0, 2.0 / 12.0);//looks for 2 to the power of number of steps in an octave.
             break;
         case 'C':
             hertz /= pow(2.0, 9.0 / 12.0);
@@ -41,7 +41,7 @@ int frequency(string note)
     }
     if (octave > 4)
     {
-        hertz *= pow(2, octave - 4);
+        hertz *= pow(2, octave - 4);//changes note to proper octave
     }
     else if (octave < 4)
     {
@@ -50,7 +50,7 @@ int frequency(string note)
 
     if (note[1] == '#')
     {
-        hertz *= pow(2.0, 1.0 / 12.0);
+        hertz *= pow(2.0, 1.0 / 12.0);//sets note one step higher or lower
     }
     else if (note[1] == 'b')
     {
@@ -61,5 +61,5 @@ int frequency(string note)
 
 bool is_rest(string s)
 {
-    return strlen(s) == 0;
+    return strlen(s) == 0;//checks for empty string
 }
