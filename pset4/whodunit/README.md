@@ -2,7 +2,7 @@
 
 ## What's `stdint.h`?
 
-TODO
+defines integer types, limits of specified width integer types, limits of other integer types.
 
 ## What's the point of using `uint8_t`, `uint32_t`, `int32_t`, and `uint16_t` in a program?
 
