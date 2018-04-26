@@ -7,7 +7,7 @@
 
 int duration(string fraction)
 {
-    int numerator =  fraction[0] - '0';
+    int numerator =  fraction[0] - '0'; // pr-MD - Interesting way to get the numbers, I had used atoi.
     int denominator = fraction[2] - '0';
 
     return numerator * (8 / denominator);
@@ -16,7 +16,7 @@ int duration(string fraction)
 int frequency(string note)
 {
     double hertz = 440.0;//default value of A4
-    int octave = note[strlen(note) - 1] - '0';
+    int octave = note[strlen(note) - 1] - '0'; //pr-MD - Good way of finding octave without knowing if there is a # or b.
     switch (note[0])
     {
         case 'A' :
@@ -63,3 +63,6 @@ bool is_rest(string s)
 {
     return strlen(s) == 0;//checks for empty string
 }
+
+// pr-MD - Subtle comments, but conveys the point.
+// pr-MD - Very clean, precise code. What more could I say?? Ya did good.
