@@ -38,10 +38,17 @@ int main(int argc, char *argv[])
     // read infile's BITMAPFILEHEADER
     BITMAPFILEHEADER bf;
     fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
+    bf.bfSize *= atoi(argv[1]);
 
     // read infile's BITMAPINFOHEADER
     BITMAPINFOHEADER bi;
     fread(&bi, sizeof(BITMAPINFOHEADER), 1, inptr);
+    printf("%i", bi.biSizeImage);
+    bi.biWidth *= atoi(argv[1]);
+    bi.biHeight *= atoi(argv[1]);
+    bi.biSizeImage *= atoi(argv[1]);
+     printf("%i", bi.biSizeImage);
+
 
     // ensure infile is (likely) a 24-bit uncompressed BMP 4.0
     if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 ||
@@ -73,6 +80,7 @@ int main(int argc, char *argv[])
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
