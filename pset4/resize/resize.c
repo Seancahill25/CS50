@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     char *infile = argv[2];
     char *outfile = argv[3];
 
+    int resizeValue = atoi(argv[1]);
+
     // open input file
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
@@ -36,19 +38,14 @@ int main(int argc, char *argv[])
     }
 
     // read infile's BITMAPFILEHEADER
-    BITMAPFILEHEADER bf;
+    BITMAPFILEHEADER bf, resized_bf;
     fread(&bf, sizeof(BITMAPFILEHEADER), 1, inptr);
-    bf.bfSize *= atoi(argv[1]);
+    resized_bf = bf;
 
     // read infile's BITMAPINFOHEADER
-    BITMAPINFOHEADER bi;
+    BITMAPINFOHEADER bi, resized_bi;
     fread(&bi, sizeof(BITMAPINFOHEADER), 1, inptr);
-    printf("%i", bi.biSizeImage);
-    bi.biWidth *= atoi(argv[1]);
-    bi.biHeight *= atoi(argv[1]);
-    bi.biSizeImage *= atoi(argv[1]);
-     printf("%i", bi.biSizeImage);
-
+    resized_bi = bi;
 
     // ensure infile is (likely) a 24-bit uncompressed BMP 4.0
     if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 ||
@@ -60,14 +57,20 @@ int main(int argc, char *argv[])
         return 4;
     }
 
+    //makes the new demension for the file
+    resized_bi.biWidth = bi.biWidth * resizeValue;
+    resized_bi.biHeight = bi.bHeight * resizeValue;
+
+     // determine padding for scanlines of original and new files
+    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    int resized_padding =  (4 - (resized_bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
-
-    // determine padding for scanlines
-    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
