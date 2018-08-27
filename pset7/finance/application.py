@@ -39,9 +39,42 @@ db = SQL("sqlite:///finance.db")
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
-    return apology("TODO")
+    stock = db.execute("SELECT symbol FROM portfolio WHERE id=:id GROUP BY symbol;", id=session['user_id'])
+    total = 0
 
+    if stock != []:
+        stocks = []
+        cash = db.execute("SELECT cash FROM users WHERE id = :user_id;", user_id=session['user_id'])
+
+        for symbol in stock:
+            symbols = lookup(symbol['symbol'])
+            shares = db.execute("SELECT SUM(amount) FROM portfolio WHERE id=:id AND symbol = :symbol;", \
+            id=session['user_id'], symbol=symbols['symbol'])
+            if shares[0]['SUM(amount)'] == 0:
+                continue
+            else:
+                stockDetails = {}
+
+                stockDetails['name'] = symbols['name']
+                stockDetails['symbol'] = symbols['symbol']
+                stockDetails['price'] = symbols['price']
+                stockDetails['shares'] = shares[0]['SUM(amount)']
+                stockDetails['total'] = stockDetails['shares'] * stockDetails['price']
+
+                stocks.append(stockDetails)
+
+        for i in range(len(stocks)):
+            total += stocks[i]['total']
+        total += cash[0]['cash']
+        for i in range(len(stocks)):
+            stocks[i]['price'] = usd(stocks[i]['price'])
+            stocks[i]['total'] = usd(stocks[i]['total'])
+
+        return render_template("index.html", stocks=stocks, cash=usd(cash[0]['cash']), total=usd(total))
+
+    else:
+        cash = db.execute("SELECT cash FROM users WHERE id=:user_id;", user_id=session['user_id'])
+        return render_template("index.html", cash=usd(cash[0]['cash']), total = usd(cash[0]['cash']))
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -79,8 +112,12 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    """Show history of transactions"""
-    return apology("TODO")
+    stocks = db.execute("SELECT symbol, amount, price, date FROM portfolio WHERE id=:id", id=session['user_id'])
+
+    for stock in stocks:
+        stock['price'] = usd(stock['price'])
+
+    return render_template("history.html", stocks=stocks)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -176,14 +213,41 @@ def register():
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
-    """Sell shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+        try:
+            symbol = lookup(request.form.get("symbol"))
+            shares = int(request.form.get("shares"))
+        except:
+            return apology("enter some input")
 
+        if not symbol:
+                return apology("enter a valid symbol")
+
+        if not shares or shares <= 0:
+            return apology("enter the amount of shares")
+
+        stocksOwned = db.execute("SELECT SUM(amount) FROM portfolio WHERE id=:id AND symbol=:symbol;", \
+        id=session['user_id'], symbol=symbol['symbol'])
+        if not stocksOwned[0]['SUM(amount)'] :
+            return apology("you don't have this stock")
+
+        if shares > stocksOwned[0]['SUM(amount)']:
+            return apology("you have that many stocks")
+
+        db.execute("INSERT INTO portfolio (symbol, amount, price, id) VALUES (:symbol, :amount, :price, :id);", \
+        symbol=symbol['symbol'], amount=-shares, price=symbol['price'], id=session["user_id"])
+
+        db.execute("UPDATE users SET cash = cash + :total_price WHERE id = :user_id;", total_price=shares*symbol['price'], \
+        user_id=session["user_id"])
+
+        return redirect('/')
+
+    else:
+        return render_template("sell.html")
 
 def errorhandler(e):
     """Handle error"""
     return apology(e.name, e.code)
-
 
 # listen for errors
 for code in default_exceptions:
