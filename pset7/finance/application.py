@@ -46,8 +46,34 @@ def index():
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
-    """Buy shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+
+        try:
+            symbol = lookup(request.form.get("symbol"))
+            shares = int(request.form.get("shares"))
+        except:
+            return apology("enter some input")
+
+        if not symbol:
+            return apology("enter a valid symbol")
+
+        if not shares or shares <= 0:
+            return apology("enter the quantity of shares")
+
+        balance = db.execute("SELECT cash FROM users WHERE id=:user_id;", user_id=session["user_id"])
+        balance = int(balance[0]['cash'])
+        if (shares * symbol['price']) > balance:
+            return apology("can't afford")
+        else:
+            db.execute("INSERT INTO portfolio (symbol, amount, price, id) VALUES (:symbol, :amount, :price, :id);", \
+            symbol=symbol['symbol'], amount=shares, price=symbol['price'], id=session["user_id"])
+
+            db.execute("UPDATE users SET cash=cash-:total_price WHERE id=:user_id;", total_price=shares*symbol['price'], \
+            user_id=session["user_id"])
+            return redirect("/")
+
+    else:
+        return render_template("buy.html")
 
 
 @app.route("/history")
@@ -108,21 +134,44 @@ def logout():
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
-    """Get stock quote."""
-    return apology("TODO")
+    if request.method == "POST":
+        quote = lookup(request.form.get("symbol"))
+        if not quote:
+            return apology("stock not found")
+        else:
+            quote['price'] = usd(quote['price'])
+            return render_template("quote.html", quote=quote)
+    else:
+        return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        db.execute("INSERT INTO "users" ("username","hash") VALUES(":username", ":hash")", username=request.form.get("username"), hash=hash)
-        # Redirect user to home page
+
+        if not request.form.get("username"):
+            return apology("Must provide username")
+
+        elif not request.form.get("password"):
+            return apology("Must provide password")
+
+        elif request.form.get("password") != request.form.get("confirm-password"):
+            return apology("password doesn't match")
+
+        result = db.execute("INSERT INTO users (username, hash) \
+                             VALUES(:username, :hash)", \
+                             username=request.form.get("username"), \
+                             hash=generate_password_hash(request.form.get("password")))
+
+        if not result:
+            return apology("Username already exist")
+
+        session["user_id"] = result
+
         return redirect("/")
 
-    # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
-
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
