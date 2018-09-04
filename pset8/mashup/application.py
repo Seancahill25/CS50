@@ -36,10 +36,10 @@ def articles():
 
 @app.route("/search")
 def search():
-    query = request.args.get("q") + "%"
+    q = request.args.get("q") + "%"
 
     place = db.execute("SELECT * FROM places WHERE postal_code \
-                                LIKE :query OR place_name LIKE :query OR admin_name1 LIKE :query", query=query)
+                                LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
 
     return jsonify(place)
 

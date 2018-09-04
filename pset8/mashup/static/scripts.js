@@ -61,7 +61,21 @@ $(document).ready(function() {
 // Add marker for place to map
 function addMarker(place)
 {
-    // TODO
+    var myLatLng = new google.maps.LatLng(place["latitude"], place["longitude"]);
+
+    // icon for the marker
+    var image = "http://maps.google.com/mapfiles/kml/pal2/icon31.png";
+
+    // instantiate marker
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: place["place_name"] +", "+ place["admin_name1"],
+        label: place["place_name"] +", "+ place["admin_name1"],
+        icon : image
+    });
+
+    markers.push(marker);
 }
 
 
@@ -122,7 +136,7 @@ function configure()
     document.addEventListener("contextmenu", function(event) {
         event.returnValue = true;
         event.stopPropagation && event.stopPropagation();
-        event.cancelBubble && event.cancelBubble();
+        //event.cancelBubble && event.cancelBubble();
     }, true);
 
     // Update UI
