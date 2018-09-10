@@ -38,9 +38,8 @@ def articles():
 def search():
     q = request.args.get("q") + "%"
 
-    place = db.execute("SELECT * FROM places WHERE postal_code \
-                                LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
-
+    place = db.execute("SELECT * FROM places WHERE postal_code LIKE :q OR place_name LIKE :q OR admin_name1 LIKE :q", q=q)
+    print("HELP", place)
     return jsonify(place)
 
 
@@ -56,8 +55,10 @@ def update():
 
     # Ensure parameters are in lat,lng format
     if not re.search("^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$", request.args.get("sw")):
+        print("check sw", request.args.get("sw"))
         raise RuntimeError("invalid sw")
     if not re.search("^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$", request.args.get("ne")):
+        print("check ne", request.args.get("ne"))
         raise RuntimeError("invalid ne")
 
     # Explode southwest corner into two variables

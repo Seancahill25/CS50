@@ -35,8 +35,10 @@ $(document).ready(function() {
 
     ];
 
+    // Options for map
+    // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     let options = {
-        center: {lat: 41.6498, lng: -71.474},
+        center: {lat: 37.4236, lng: -122.1619}, // Stanford, California
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         maxZoom: 14,
@@ -61,10 +63,10 @@ $(document).ready(function() {
 // Add marker for place to map
 function addMarker(place)
 {
-    var myLatLng = new google.maps.LatLng(place["latitude"], place["longitude"]);
+    var myLatLng = new google.maps.LatLng(place['latitude'], place['longitude']);
 
     // icon for the marker
-    var image = "http://maps.google.com/mapfiles/kml/pal2/icon31.png";
+    var image = "http://www.google.com/mapfiles/marker.png";
 
     // instantiate marker
     var marker = new google.maps.Marker({
@@ -73,6 +75,27 @@ function addMarker(place)
         title: place["place_name"] +", "+ place["admin_name1"],
         label: place["place_name"] +", "+ place["admin_name1"],
         icon : image
+    });
+     marker.addListener('click', function() {
+      showInfo(marker);
+
+      let parameters = {
+          geo: place.postal_code
+      };
+
+      $.getJSON("/articles", parameters, function(data, textStatus, jqXHR) {
+
+        // Call typeahead's callback with search results (i.e., places)
+        var content = '<ul>';
+
+        data.forEach(function(row) {
+            content += '<li><a href="' + row.link + '" target="_blank">' + row.title + '</a></li>'
+        });
+
+        content += '</ul>';
+
+        showInfo(marker, content)
+      });
     });
 
     markers.push(marker);
@@ -136,7 +159,7 @@ function configure()
     document.addEventListener("contextmenu", function(event) {
         event.returnValue = true;
         event.stopPropagation && event.stopPropagation();
-        //event.cancelBubble && event.cancelBubble();
+        event.cancelBubble && event.cancelBubble();
     }, true);
 
     // Update UI
@@ -150,10 +173,7 @@ function configure()
 // Remove markers from map
 function removeMarkers()
 {
-   for (var marker = 0, markers = markers.length; marker < markers; marker++)
-    {
-	    markers[marker].setMap(null);
-    }
+    // TODO
 }
 
 
@@ -167,6 +187,7 @@ function search(query, syncResults, asyncResults)
     $.getJSON("/search", parameters, function(data, textStatus, jqXHR) {
 
         // Call typeahead's callback with search results (i.e., places)
+        console.log("dada", data)
         asyncResults(data);
     });
 }
