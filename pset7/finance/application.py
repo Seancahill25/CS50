@@ -101,7 +101,7 @@ def buy():
             db.execute("INSERT INTO portfolio (symbol, amount, price, id) VALUES (:symbol, :amount, :price, :id);", \
             symbol=symbol['symbol'], amount=shares, price=symbol['price'], id=session["user_id"])
 
-            db.execute("UPDATE users SET cash=cash-:total_price WHERE id=:user_id;", total_price=shares*symbol['price'], \
+            db.execute("UPDATE users SET cash = cash-:total_price WHERE id=:user_id;", total_price=shares*symbol['price'], \
             user_id=session["user_id"])
             return redirect("/")
 
@@ -192,7 +192,7 @@ def register():
         elif not request.form.get("password"):
             return apology("Must provide password")
 
-        elif request.form.get("password") != request.form.get("confirm-password"):
+        elif request.form.get("password") != request.form.get("confirmation"):
             return apology("password doesn't match")
 
         result = db.execute("INSERT INTO users (username, hash) \
