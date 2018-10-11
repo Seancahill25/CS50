@@ -2,7 +2,9 @@ from cs50 import get_float
 coins = 0
 while True:
     number = get_float("Change owed: ")
-    break
+    if number >= 0:
+        break
+    print("Try again")
 change = round(number * 100)
 while change >= 25:
     coins += 1

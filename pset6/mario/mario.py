@@ -2,8 +2,9 @@ from cs50 import get_int
 
 while True:
     n = get_int("Height: ")
-    if n > 0 or n < 23:
-        break;
+    if n >= 0 and n <= 23:
+        break
+    print("Try again")
 for i in range(n):
     for j in range(n - i - 1):
         print(" ", end="")

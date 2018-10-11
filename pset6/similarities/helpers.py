@@ -24,5 +24,3 @@ def substrings(a, b, n):
     substringsB = set(substringLength(b, n))
 
     return substringsA & substringsB
-
-
